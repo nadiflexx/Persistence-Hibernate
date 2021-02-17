@@ -1,6 +1,7 @@
 package org.example.manager;
 
 import org.example.model.Expedient;
+import org.example.utils.Printer;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class ExpedientsManager {
     private SessionFactory sessionFactory;
+    private Printer printer;
 
     public ExpedientsManager() {
         Configuration con = new Configuration().configure().addAnnotatedClass(Expedient.class);
@@ -20,6 +22,7 @@ public class ExpedientsManager {
         serviceRegistryBuilder.applySettings(con.getProperties());
         ServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
         this.sessionFactory = con.buildSessionFactory(serviceRegistry);
+        this.printer = new Printer();
     }
 
     public void selectExpedients() {
@@ -28,13 +31,7 @@ public class ExpedientsManager {
 
         String selectAll = "FROM Expedient ";
         Query query = session.createQuery(selectAll);
-        List<Expedient> list = query.list();
-        for (Expedient value : list) {
-            System.out.println("DNI: " + value.getDni());
-            System.out.println("Name: " + value.getName());
-            System.out.println("Surname: " + value.getSurnames());
-            System.out.println();
-        }
+        printer.printExpedients(query);
         transaction.commit();
     }
 }

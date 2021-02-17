@@ -1,7 +1,12 @@
 package org.example.utils;
 
+import org.example.model.Expedient;
+import org.example.model.User;
+import org.hibernate.query.Query;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class Printer {
 
@@ -64,6 +69,26 @@ public class Printer {
         System.out.println("----------------------------------");
         System.out.println("-------------GOODBYE!-------------");
         System.out.println("----------------------------------");
+    }
+
+    public void printUsers(Query query) {
+        List<User> list = query.list();
+        for (User value : list) {
+            System.out.println("DNI: " + value.getDni());
+            System.out.println("Name: " + value.getName());
+            System.out.println("Surname: " + value.getSurnames());
+            System.out.println();
+        }
+    }
+
+    public void printExpedients(Query query) {
+        List<Expedient> list = query.list();
+        for (Expedient value : list) {
+            System.out.println("DNI: " + value.getDni());
+            System.out.println("Name: " + value.getName());
+            System.out.println("Surname: " + value.getSurnames());
+            System.out.println();
+        }
     }
 
            /* Expedient person = new Expedient();

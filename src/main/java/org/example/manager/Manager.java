@@ -34,7 +34,7 @@ public class Manager {
                         expedientsManager.selectExpedients();
                         break;
                     case 2:
-                        userManager.run();
+                        userManager.selectUsers();
                         break;
                     case 0:
                         printer.exit();
