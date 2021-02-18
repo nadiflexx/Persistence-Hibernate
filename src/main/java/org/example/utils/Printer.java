@@ -42,7 +42,7 @@ public class Printer {
         System.out.println(" ------------------------");
     }
 
-    public void showMenuAuxiliary() {
+    public void showMenuAssistant() {
         System.out.println();
         System.out.println("Choose an option: ");
         System.out.println();
@@ -70,23 +70,45 @@ public class Printer {
         System.out.println("----------------------------------");
     }
 
-    public void printUsers(Query query) {
-        List<User> list = query.list();
-        for (User value : list) {
-            System.out.println("DNI: " + value.getDni());
-            System.out.println("Name: " + value.getName());
-            System.out.println("Surname: " + value.getSurnames());
-            System.out.println();
+    public void printUsers(List<User> userList) {
+        for (User user : userList) {
+            System.out.println("(" + user.getId() + ")");
+            System.out.println(" |  Name: " + user.getName());
+            System.out.println(" |  Surname: " + user.getSurnames());
+            System.out.println(" |  DNI: " + user.getDni());
+            System.out.println(" |  User type: " + printUserType(user.getUserType()));
+            System.out.println(" |  Personal license: " + user.getLicense());
+            System.out.println(" |  Last access: " + user.getLastAccess());
+            System.out.println(" |");
         }
     }
 
-    public void printExpedients(Query query) {
+    private String printUserType(int userType) {
+        String type = "Administrator";
+        if(userType == 1) type = "Assistant";
+        else if(userType == 2) type = "Veterinary";
+        return type;
+    }
+
+    public void printExpedient(Expedient expedient) {
+        System.out.println("(" + expedient.getId() + ")");
+        System.out.println(" |  Name: " + expedient.getName());
+        System.out.println(" |  Surname: " + expedient.getSurnames());
+        System.out.println(" |  DNI: " + expedient.getDni());
+        System.out.println(" |  Discharge date: " + expedient.getDischargeDate());
+        System.out.println(" |  Number of pets: " + expedient.getNpets());
+        System.out.println(" |  Postal code: " + expedient.getPostalCode());
+        System.out.println(" |  Phone: " + expedient.getPhone());
+        System.out.println(" |");
+    }
+
+    public void printExpedientsMini(Query query) {
         List<Expedient> list = query.list();
-        for (Expedient value : list) {
-            System.out.println("DNI: " + value.getDni());
-            System.out.println("Name: " + value.getName());
-            System.out.println("Surname: " + value.getSurnames());
-            System.out.println();
+        for (Expedient expedient : list) {
+            System.out.println("(" + expedient.getId() + ")");
+            System.out.println(" |  Name: " + expedient.getName());
+            System.out.println(" |  Surname: " + expedient.getSurnames());
+            System.out.println(" |");
         }
     }
 

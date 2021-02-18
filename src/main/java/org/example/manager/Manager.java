@@ -49,7 +49,7 @@ public class Manager {
                         break;
                 }
             } catch (NumberFormatException | IOException e) {
-                System.err.println("Error. Wrong characters. Try again.");
+                System.out.println("Error. Wrong characters. Try again.");
             }
         }
     }
@@ -63,41 +63,41 @@ public class Manager {
 
                 switch (option) {
                     case -1:
-                        System.out.println("Error. Incorrect option. Try again.");
+                        System.out.println("--> Error. Incorrect option. Choose an option between 0 and 8 <-- ");
                         break;
                     case 1:
-
+                        expedientsManager.consultExpedientsMini();
                         break;
                     case 2:
-
+                        expedientsManager.registerExpedient(userManager.getUser());
                         break;
                     case 3:
-
+                        expedientsManager.deleteExpedient();
                         break;
                     case 4:
-
+                        expedientsManager.editExpedient();
                         break;
                     case 5:
-
+                        userManager.registerUser();
                         break;
                     case 6:
-
+                        userManager.deleteUser();
                         break;
                     case 7:
-
+                        userManager.editUser();
                         break;
                     case 8:
-
+                        userManager.consultUsers();
                         break;
                     case 0:
                         exit = true;
                         break;
                     default:
-                        System.err.println("--> Error. Incorrect option. Choose an option between 0 and 8 <--");
+                        System.out.println("--> Error. Incorrect option. Choose an option between 0 and 8 <--");
                         break;
                 }
             } catch (NumberFormatException | IOException e) {
-                System.err.println("Error. Wrong characters. Try again.");
+                System.out.println("Error. Wrong characters. Try again.");
             }
         }
     }
@@ -106,7 +106,7 @@ public class Manager {
         int option;
 
         if(userType == 1) {
-            printer.showMenuAuxiliary();
+            printer.showMenuAssistant();
             option = Integer.parseInt(bufferedReader.readLine());
             if (option != 1) option = -1;
         } else if (userType == 2) {
