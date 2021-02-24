@@ -63,7 +63,7 @@ public class Manager {
 
                 switch (option) {
                     case -1:
-                        System.out.println("--> Error. Incorrect option. Choose an option between 0 and 8 <-- ");
+                        System.out.println("--> Error. Incorrect option. Try again. <-- ");
                         break;
                     case 1:
                         expedientsManager.consultExpedientsMini();
@@ -93,7 +93,7 @@ public class Manager {
                         exit = true;
                         break;
                     default:
-                        System.out.println("--> Error. Incorrect option. Choose an option between 0 and 8 <--");
+                        System.out.println("--> Error. Incorrect option. Try again <--");
                         break;
                 }
             } catch (NumberFormatException | IOException e) {

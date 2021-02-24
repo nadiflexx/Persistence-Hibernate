@@ -3,6 +3,7 @@ package org.example.manager;
 import org.example.model.Expedient;
 import org.example.model.User;
 import org.example.utils.Printer;
+import org.example.utils.Queries;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 public class ExpedientsManager {
     private SessionFactory sessionFactory;
     private Printer printer;
+    private Queries queries;
     private Scanner scanner;
 
     public ExpedientsManager() {
@@ -25,28 +27,34 @@ public class ExpedientsManager {
         ServiceRegistry serviceRegistry = serviceRegistryBuilder.build();
         this.sessionFactory = con.buildSessionFactory(serviceRegistry);
         this.printer = new Printer();
+        this.queries = new Queries();
         this.scanner = new Scanner(System.in);
     }
 
-    public void consultExpedientsMini() {
+    public boolean consultExpedientsMini() {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        String selectAll = "FROM Expedient ";
-        Query query = session.createQuery(selectAll);
-        printer.printExpedientsMini(query);
-        transaction.commit();
-        System.out.println("Select one expedient by its ID to show all information: ");
-        int id = scanner.nextInt();
-        consultExpedients(id);
+        Query query = session.createQuery(queries.SELECT_TABLE_EXPEDIENT);
+        if(query.list().size() > 0) {
+            printer.printExpedientsMini(query);
+            transaction.commit();
+            System.out.println("Select one expedient by its ID to show all information: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            consultExpedients(id);
+            return true;
+        } else {
+            System.out.println("VOID CONTENT");
+        }
+        return false;
     }
 
     private void consultExpedients(int id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        String selectAll = "FROM Expedient where id=:id ";
-        Query query = session.createQuery(selectAll);
+        Query query = session.createQuery(queries.SELECT_TABLE_EXPEDIENT_BY_ID);
         query.setParameter("id", id);
         Expedient expedient = (Expedient) query.getSingleResult();
         printer.printExpedient(expedient);
@@ -61,12 +69,13 @@ public class ExpedientsManager {
         System.out.println("Type user's DNI: ");
         String dni = scanner.nextLine();
         if(verifyFormatDni(dni)) {
-            System.out.println("Type the number of pets: ");
-            int npets = scanner.nextInt();
             System.out.println("Type the postal code: ");
             String postalCode = scanner.nextLine();
             System.out.println("Type your phone: ");
             String phone = scanner.nextLine();
+            System.out.println("Type the number of pets: ");
+            int npets = scanner.nextInt();
+            scanner.nextLine();
             insertExpedient(user, name, surname, dni, npets, postalCode, phone);
         }
     }
@@ -100,26 +109,28 @@ public class ExpedientsManager {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        String selectAll = "SELECT max(id) FROM Expedient ";
-        Query query = session.createQuery(selectAll);
-        int id = (Integer) query.getSingleResult();
+        Query query = session.createQuery(queries.SELECT_MAX_ID_FROM_EXPEDIENT);
+        int id;
+        if(query.getSingleResult() == null) id = 0;
+        else id = (Integer) query.getSingleResult();
         transaction.commit();
         return id + 1;
     }
 
     public void deleteExpedient() {
-        consultExpedientsMini();
-        System.out.println("Choose the expedient by its id: ");
-        int id = scanner.nextInt();
-        deleteExpedientById(id);
+        if(consultExpedientsMini()) {
+            System.out.println("Type the id again if you are sure that you want to delete the expedient: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            deleteExpedientById(id);
+        }
     }
 
     private void deleteExpedientById(int id) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        String delete = "delete from Expedient where id =:id";
-        Query queryDelete = session.createQuery(delete);
+        Query queryDelete = session.createQuery(queries.DELETE_FROM_EXPEDIENT_BY_ID);
         queryDelete.setParameter("id", id);
 
         if(queryDelete.executeUpdate() == 0) System.out.println("Error. Expedient not found.");
