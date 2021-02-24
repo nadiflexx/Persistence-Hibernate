@@ -1,5 +1,6 @@
 package org.example.manager;
 
+import org.example.exceptions.VetStucomException;
 import org.example.utils.Printer;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,9 +34,9 @@ public class Manager {
 
                 switch (Integer.parseInt(bufferedReader.readLine())) {
                     case 1:
-                        if(userManager.login()) {
-                            menuUser(userManager.getUser().getUserType());
-                        }
+                        userManager.login();
+                        menuUser(userManager.getUser().getUserType());
+
                         break;
                     case 2:
                         userManager.selectUsers();
@@ -50,6 +51,8 @@ public class Manager {
                 }
             } catch (NumberFormatException | IOException e) {
                 System.out.println("Error. Wrong characters. Try again.");
+            } catch (VetStucomException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -98,6 +101,8 @@ public class Manager {
                 }
             } catch (NumberFormatException | IOException e) {
                 System.out.println("Error. Wrong characters. Try again.");
+            } catch (VetStucomException e) {
+                System.out.println(e.getMessage());
             }
         }
     }

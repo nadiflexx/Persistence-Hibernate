@@ -1,5 +1,6 @@
 package org.example.manager;
 
+import org.example.exceptions.VetStucomException;
 import org.example.model.User;
 import org.example.utils.Printer;
 import org.example.utils.Queries;
@@ -38,16 +39,14 @@ public class UserManager {
         return user;
     }
 
-    public boolean login() {
+    public void login() throws VetStucomException {
         System.out.println("Type your username: ");
         String username = scanner.nextLine();
         System.out.println("Type your password: ");
         String password = scanner.nextLine();
 
         user = verifyLogin(username, password);
-        if (user != null) return true;
-        else System.out.println("Error. Username or password not found. Try again.");
-        return false;
+        if (user == null) throw new VetStucomException(VetStucomException.wrongLogin);
     }
 
     private User verifyLogin(String username, String password) {
@@ -72,7 +71,7 @@ public class UserManager {
         printer.printUsers(selectUsers());
     }
 
-    public void registerUser() {
+    public void registerUser() throws VetStucomException {
         System.out.println("Type user's name: ");
         String name = scanner.nextLine();
         System.out.println("Type user's surnname: ");
@@ -92,19 +91,19 @@ public class UserManager {
         }
     }
 
-    public boolean verifyFormatDni(String dni) {
+    public boolean verifyFormatDni(String dni) throws VetStucomException {
         boolean isDniCorrect = false;
         if (dni.length() == 9) {
             if (Character.isLetter(dni.charAt(8))) {
                 for (int i = 0; i < 8; i++) { //Verifying that the first 8 characters are numbers.
                     if (!Character.isDigit(dni.charAt(i))) {
-                        System.out.println("Incorrect DNI format. ");
+                        throw new VetStucomException(VetStucomException.contentVoid);
                     } else {
                         isDniCorrect = true;
                     }
                 }
             }
-        } else System.out.println("Incorrect DNI format.");
+        } else throw new VetStucomException(VetStucomException.contentVoid);
         return isDniCorrect;
     }
 
@@ -127,7 +126,7 @@ public class UserManager {
         return id + 1;
     }
 
-    public void deleteUser() {
+    public void deleteUser() throws VetStucomException {
         consultUsers();
         System.out.println("Choose the expedient by its id: ");
         int id = scanner.nextInt();
@@ -136,14 +135,14 @@ public class UserManager {
         deleteUserByID(id);
     }
 
-    private void deleteUserByID(int id) {
+    private void deleteUserByID(int id) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         
         Query queryDelete = session.createQuery(queries.DELETE_FROM_USER_BY_ID);
         queryDelete.setParameter("id", id);
 
-        if(queryDelete.executeUpdate() == 0) System.out.println("Error. User not found.");
+        if(queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.userNotFound);
         transaction.commit();
     }
 

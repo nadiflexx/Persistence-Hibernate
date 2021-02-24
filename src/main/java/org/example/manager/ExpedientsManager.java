@@ -1,5 +1,6 @@
 package org.example.manager;
 
+import org.example.exceptions.VetStucomException;
 import org.example.model.Expedient;
 import org.example.model.User;
 import org.example.utils.Printer;
@@ -31,7 +32,7 @@ public class ExpedientsManager {
         this.scanner = new Scanner(System.in);
     }
 
-    public boolean consultExpedientsMini() {
+    public void consultExpedientsMini() throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -43,11 +44,7 @@ public class ExpedientsManager {
             int id = scanner.nextInt();
             scanner.nextLine();
             consultExpedients(id);
-            return true;
-        } else {
-            System.out.println("VOID CONTENT");
-        }
-        return false;
+        } else throw new VetStucomException(VetStucomException.contentVoid);
     }
 
     private void consultExpedients(int id) {
@@ -61,7 +58,7 @@ public class ExpedientsManager {
         transaction.commit();
     }
 
-    public void registerExpedient(User user) {
+    public void registerExpedient(User user) throws VetStucomException {
         System.out.println("Type user's name: ");
         String name = scanner.nextLine();
         System.out.println("Type user's surnname: ");
@@ -80,19 +77,19 @@ public class ExpedientsManager {
         }
     }
 
-    public boolean verifyFormatDni(String dni) {
+    public boolean verifyFormatDni(String dni) throws VetStucomException {
         boolean isDniCorrect = false;
         if (dni.length() == 9) {
             if (Character.isLetter(dni.charAt(8))) {
                 for (int i = 0; i < 8; i++) { //Verifying that the first 8 characters are numbers.
                     if (!Character.isDigit(dni.charAt(i))) {
-                        System.out.println("Incorrect DNI format.");
+                        throw new VetStucomException(VetStucomException.incorrectFormatDNI);
                     } else {
                         isDniCorrect = true;
                     }
                 }
             }
-        } else System.out.println("Incorrect DNI format.");
+        } else throw new VetStucomException(VetStucomException.incorrectFormatDNI);
         return isDniCorrect;
     }
 
@@ -117,23 +114,22 @@ public class ExpedientsManager {
         return id + 1;
     }
 
-    public void deleteExpedient() {
-        if(consultExpedientsMini()) {
-            System.out.println("Type the id again if you are sure that you want to delete the expedient: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
-            deleteExpedientById(id);
-        }
+    public void deleteExpedient() throws VetStucomException {
+        consultExpedientsMini();
+        System.out.println("Type the id again if you are sure that you want to delete the expedient: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        deleteExpedientById(id);
     }
 
-    private void deleteExpedientById(int id) {
+    private void deleteExpedientById(int id) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
         Query queryDelete = session.createQuery(queries.DELETE_FROM_EXPEDIENT_BY_ID);
         queryDelete.setParameter("id", id);
 
-        if(queryDelete.executeUpdate() == 0) System.out.println("Error. Expedient not found.");
+        if(queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.expedientNotFound);
         transaction.commit();
     }
 

@@ -112,30 +112,7 @@ public class Printer {
         }
     }
 
-           /* Expedient person = new Expedient();
-        person.setDni("12345678C");
-        person.setName("JOSE");
-        person.setSurname("Fernandez");
-
-        //SELECT
-        String selectAll = "FROM Expedient";
-        Query query = session.createQuery(selectAll);
-        List<Expedient> list = query.list();
-        for (Expedient value : list) {
-            System.out.println("DNI: " + value.getDni());
-            System.out.println("Name: " + value.getName());
-            System.out.println("Surname: " + value.getSurname());
-            System.out.println();
-        }
-
-        //DELETE
-        String delete = "delete from Expedient where dni =:dni";
-        Query queryDelete = session.createQuery(delete);
-        queryDelete.setParameter("dni", "12345678A");
-        queryDelete.executeUpdate();
-
-
-        //UPDATE
+    /* //UPDATE
         String update = "update from Expedient set dni =:newDni where dni=:dni";
         Query queryUpdate = session.createQuery(update);
         queryUpdate.setParameter("dni", "12345678g");
