@@ -12,6 +12,10 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.Scanner;
 
@@ -19,7 +23,7 @@ public class ExpedientsManager {
     private SessionFactory sessionFactory;
     private Printer printer;
     private Queries queries;
-    private Scanner scanner;
+    private final BufferedReader bufferedReader;
 
     public ExpedientsManager() {
         Configuration con = new Configuration().configure().addAnnotatedClass(Expedient.class);
@@ -29,10 +33,10 @@ public class ExpedientsManager {
         this.sessionFactory = con.buildSessionFactory(serviceRegistry);
         this.printer = new Printer();
         this.queries = new Queries();
-        this.scanner = new Scanner(System.in);
+        this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    public void consultExpedientsMini() throws VetStucomException {
+    public void consultExpedientsMini() throws VetStucomException, IOException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -41,8 +45,7 @@ public class ExpedientsManager {
             printer.printExpedientsMini(query);
             transaction.commit();
             System.out.println("Select one expedient by its ID to show all information: ");
-            int id = scanner.nextInt();
-            scanner.nextLine();
+            int id = Integer.parseInt(bufferedReader.readLine());
             consultExpedients(id);
         } else throw new VetStucomException(VetStucomException.contentVoid);
     }
@@ -58,21 +61,21 @@ public class ExpedientsManager {
         transaction.commit();
     }
 
-    public void registerExpedient(User user) throws VetStucomException {
+    public void registerExpedient(User user) throws VetStucomException, IOException {
         System.out.println("Type user's name: ");
-        String name = scanner.nextLine();
+        String name = bufferedReader.readLine();
         System.out.println("Type user's surnname: ");
-        String surname = scanner.nextLine();
+        String surname = bufferedReader.readLine();
         System.out.println("Type user's DNI: ");
-        String dni = scanner.nextLine();
+        String dni = bufferedReader.readLine();
         if(verifyFormatDni(dni)) {
-            System.out.println("Type the postal code: ");
-            String postalCode = scanner.nextLine();
-            System.out.println("Type your phone: ");
-            String phone = scanner.nextLine();
             System.out.println("Type the number of pets: ");
-            int npets = scanner.nextInt();
-            scanner.nextLine();
+            int npets = Integer.parseInt(bufferedReader.readLine());
+            System.out.println("Type the postal code: ");
+            String postalCode = bufferedReader.readLine();
+            System.out.println("Type your phone: ");
+            String phone = bufferedReader.readLine();
+
             insertExpedient(user, name, surname, dni, npets, postalCode, phone);
         }
     }
@@ -114,11 +117,10 @@ public class ExpedientsManager {
         return id + 1;
     }
 
-    public void deleteExpedient() throws VetStucomException {
+    public void deleteExpedient() throws VetStucomException, IOException {
         consultExpedientsMini();
         System.out.println("Type the id again if you are sure that you want to delete the expedient: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        int id = Integer.parseInt(bufferedReader.readLine());
         deleteExpedientById(id);
     }
 

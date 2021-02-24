@@ -12,6 +12,9 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.hibernate.service.ServiceRegistry;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
@@ -22,7 +25,7 @@ public class UserManager {
     private User user;
     private Printer printer;
     private Queries queries;
-    private Scanner scanner;
+    private final BufferedReader bufferedReader;
 
     public UserManager() {
         Configuration con = new Configuration().configure().addAnnotatedClass(User.class);
@@ -32,18 +35,18 @@ public class UserManager {
         this.sessionFactory = con.buildSessionFactory(serviceRegistry);
         this.printer = new Printer();
         this.queries = new Queries();
-        this.scanner = new Scanner(System.in);
+        this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public User getUser() {
         return user;
     }
 
-    public void login() throws VetStucomException {
+    public void login() throws VetStucomException, IOException {
         System.out.println("Type your username: ");
-        String username = scanner.nextLine();
+        String username = bufferedReader.readLine();
         System.out.println("Type your password: ");
-        String password = scanner.nextLine();
+        String password = bufferedReader.readLine();
 
         user = verifyLogin(username, password);
         if (user == null) throw new VetStucomException(VetStucomException.wrongLogin);
@@ -71,22 +74,21 @@ public class UserManager {
         printer.printUsers(selectUsers());
     }
 
-    public void registerUser() throws VetStucomException {
+    public void registerUser() throws VetStucomException, IOException {
         System.out.println("Type user's name: ");
-        String name = scanner.nextLine();
+        String name = bufferedReader.readLine();
         System.out.println("Type user's surnname: ");
-        String surname = scanner.nextLine();
+        String surname = bufferedReader.readLine();
         System.out.println("Type user's DNI: ");
-        String dni = scanner.nextLine();
+        String dni = bufferedReader.readLine();
 
         if(verifyFormatDni(dni)) {
             System.out.println("Type user's password: ");
-            String password = scanner.nextLine();
+            String password = bufferedReader.readLine();
             System.out.println("Type user's personal license: ");
-            String license = scanner.nextLine();
+            String license = bufferedReader.readLine();
             System.out.println("Type user's type: ");
-            int type = scanner.nextInt();
-            scanner.nextLine();
+            int type = Integer.parseInt(bufferedReader.readLine());
             insertUser(name, surname, dni, password, license, type);
         }
     }
@@ -126,12 +128,11 @@ public class UserManager {
         return id + 1;
     }
 
-    public void deleteUser() throws VetStucomException {
+    public void deleteUser() throws VetStucomException, IOException {
         consultUsers();
         System.out.println("Choose the expedient by its id: ");
-        int id = scanner.nextInt();
-        /// TODO: 24/02/2021 ADMIN CANNOT DELETE HIMSELF 
-        scanner.nextLine();
+        int id = Integer.parseInt(bufferedReader.readLine());
+        /// TODO: 24/02/2021 ADMIN CANNOT DELETE HIMSELF
         deleteUserByID(id);
     }
 

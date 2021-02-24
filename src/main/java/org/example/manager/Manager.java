@@ -46,8 +46,7 @@ public class Manager {
                         exit = true;
                         break;
                     default:
-                        System.err.println("--> Error. Incorrect option. Choose an option between 0 and 2 <--");
-                        break;
+                        throw new VetStucomException(VetStucomException.incorrectOption);
                 }
             } catch (NumberFormatException | IOException e) {
                 System.out.println("Error. Wrong characters. Try again.");
@@ -66,8 +65,7 @@ public class Manager {
 
                 switch (option) {
                     case -1:
-                        System.out.println("--> Error. Incorrect option. Try again. <-- ");
-                        break;
+                        throw new VetStucomException(VetStucomException.permissionDenied);
                     case 1:
                         expedientsManager.consultExpedientsMini();
                         break;
@@ -96,8 +94,7 @@ public class Manager {
                         exit = true;
                         break;
                     default:
-                        System.out.println("--> Error. Incorrect option. Try again <--");
-                        break;
+                        throw new VetStucomException(VetStucomException.incorrectOption);
                 }
             } catch (NumberFormatException | IOException e) {
                 System.out.println("Error. Wrong characters. Try again.");

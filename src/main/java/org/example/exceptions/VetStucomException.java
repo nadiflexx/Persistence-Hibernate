@@ -5,11 +5,14 @@ import java.util.List;
 
 public class VetStucomException extends Exception {
 
-    public static final int incorrectFormatDNI = 0;
-    public static final int contentVoid = 1;
-    public static final int wrongLogin = 2;
-    public static final int expedientNotFound = 3;
-    public static final int userNotFound = 4;
+    public static final int incorrectOption = 0;
+    public static final int permissionDenied = 1;
+    public static final int incorrectFormatDNI = 2;
+    public static final int contentVoid = 3;
+    public static final int wrongLogin = 4;
+    public static final int expedientNotFound = 5;
+    public static final int userNotFound = 6;
+
 
     private final int value;
 
@@ -18,11 +21,13 @@ public class VetStucomException extends Exception {
     }
 
     private List<String> message = Arrays.asList(
-            "Incorrect format of DNI. Please introduce 8 numbers and 1 letter",
-            "The content you are requesting to show is not in the database. Create it first and try again.",
-            "Error. Username or password not found. Try again.",
-            "Expedient not found. Try again",
-            "User not found. Try again"
+            "--> Error. Incorrect option. Try again <--",
+            "--> Error. Permission denied. Try again <--",
+            "--> Incorrect format of DNI. Please introduce 8 numbers and 1 letter <--",
+            "--> The content you are requesting to show is not in the database. Create it first and try again <--",
+            "--> Error. Username or password not found. Try again <--",
+            "--> Expedient not found. Try again <--",
+            "--> User not found. Try again <--"
     );
 
     @Override
