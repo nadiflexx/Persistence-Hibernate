@@ -42,6 +42,15 @@ public class Printer {
         System.out.println(" ------------------------");
     }
 
+    public void showUserTypes() {
+        System.out.println();
+        System.out.println(" -------TYPES------");
+        System.out.println("| 1) Assistant     |");
+        System.out.println("| 2) Veterinary    |");
+        System.out.println("| 3) Administrator |");
+        System.out.println(" ------------------");
+    }
+
     public void showMenuAssistant() {
         System.out.println();
         System.out.println("Choose an option: ");
@@ -78,7 +87,7 @@ public class Printer {
             System.out.println(" |  DNI: " + user.getDni());
             System.out.println(" |  User type: " + printUserType(user.getUserType()));
             System.out.println(" |  Personal license: " + user.getLicense());
-            System.out.println(" |  Last access: " + user.getLastAccess());
+            if(user.getLastAccess() != null) System.out.println(" |  Last access: " + user.getLastAccess());
             System.out.println(" |");
         }
     }
@@ -111,13 +120,4 @@ public class Printer {
             System.out.println(" |");
         }
     }
-
-    /* //UPDATE
-        String update = "update from Expedient set dni =:newDni where dni=:dni";
-        Query queryUpdate = session.createQuery(update);
-        queryUpdate.setParameter("dni", "12345678g");
-        queryUpdate.setParameter("newDni", "12345678b");
-        queryUpdate.executeUpdate();
-
-        tx.commit();*/
 }

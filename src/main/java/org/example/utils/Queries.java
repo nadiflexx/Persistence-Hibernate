@@ -11,4 +11,8 @@ public class Queries {
     //DELETE
     public final String DELETE_FROM_EXPEDIENT_BY_ID =  "delete from Expedient where id =:id";
     public final String DELETE_FROM_USER_BY_ID =  "delete from User where id =:id";
+
+
+    //UPDATE
+    public final String UPDATE_DATE_USER  = "update from User set lastAccess=:date where dni=: dni";
 }

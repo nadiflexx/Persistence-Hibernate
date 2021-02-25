@@ -36,7 +36,7 @@ public class ExpedientsManager {
         this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    public void consultExpedientsMini() throws VetStucomException, IOException {
+    public int consultExpedientsMini() throws VetStucomException, IOException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -47,6 +47,7 @@ public class ExpedientsManager {
             System.out.println("Select one expedient by its ID to show all information: ");
             int id = Integer.parseInt(bufferedReader.readLine());
             consultExpedients(id);
+            return id;
         } else throw new VetStucomException(VetStucomException.contentVoid);
     }
 
@@ -64,7 +65,7 @@ public class ExpedientsManager {
     public void registerExpedient(User user) throws VetStucomException, IOException {
         System.out.println("Type user's name: ");
         String name = bufferedReader.readLine();
-        System.out.println("Type user's surnname: ");
+        System.out.println("Type user's surname: ");
         String surname = bufferedReader.readLine();
         System.out.println("Type user's DNI: ");
         String dni = bufferedReader.readLine();
@@ -118,10 +119,11 @@ public class ExpedientsManager {
     }
 
     public void deleteExpedient() throws VetStucomException, IOException {
-        consultExpedientsMini();
-        System.out.println("Type the id again if you are sure that you want to delete the expedient: ");
-        int id = Integer.parseInt(bufferedReader.readLine());
-        deleteExpedientById(id);
+        int id = consultExpedientsMini();
+        System.out.println("Are sure that you want to delete this expedient? y/n: ");
+        String answer = bufferedReader.readLine();
+        if(answer.equalsIgnoreCase("y")) deleteExpedientById(id);
+        else System.out.println("Canceling your request...");
     }
 
     private void deleteExpedientById(int id) throws VetStucomException {

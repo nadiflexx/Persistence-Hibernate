@@ -12,6 +12,7 @@ public class VetStucomException extends Exception {
     public static final int wrongLogin = 4;
     public static final int expedientNotFound = 5;
     public static final int userNotFound = 6;
+    public static final int wrongType = 7;
 
 
     private final int value;
@@ -27,7 +28,9 @@ public class VetStucomException extends Exception {
             "--> The content you are requesting to show is not in the database. Create it first and try again <--",
             "--> Error. Username or password not found. Try again <--",
             "--> Expedient not found. Try again <--",
-            "--> User not found. Try again <--"
+            "--> User not found. Try again <--",
+            "--> Wrong type. Try again <--"
+
     );
 
     @Override

@@ -50,6 +50,7 @@ public class UserManager {
 
         user = verifyLogin(username, password);
         if (user == null) throw new VetStucomException(VetStucomException.wrongLogin);
+        else updateDateAccess();
     }
 
     private User verifyLogin(String username, String password) {
@@ -58,6 +59,17 @@ public class UserManager {
             if(user.getName().equalsIgnoreCase(username)) if(user.getPassword().equals(password)) userLogged = user;
         }
         return userLogged;
+    }
+
+    private void updateDateAccess() {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query queryUpdate = session.createQuery(queries.UPDATE_DATE_USER);
+        queryUpdate.setParameter("dni", user.getDni());
+        queryUpdate.setParameter("date", new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+        queryUpdate.executeUpdate();
+        transaction.commit();
     }
 
     public List<User> selectUsers() {
@@ -77,7 +89,7 @@ public class UserManager {
     public void registerUser() throws VetStucomException, IOException {
         System.out.println("Type user's name: ");
         String name = bufferedReader.readLine();
-        System.out.println("Type user's surnname: ");
+        System.out.println("Type user's surname: ");
         String surname = bufferedReader.readLine();
         System.out.println("Type user's DNI: ");
         String dni = bufferedReader.readLine();
@@ -87,9 +99,11 @@ public class UserManager {
             String password = bufferedReader.readLine();
             System.out.println("Type user's personal license: ");
             String license = bufferedReader.readLine();
+            printer.showUserTypes();
             System.out.println("Type user's type: ");
             int type = Integer.parseInt(bufferedReader.readLine());
-            insertUser(name, surname, dni, password, license, type);
+            if(type > 0 && type < 4) insertUser(name, surname, dni, password, license, type);
+            else throw new VetStucomException(VetStucomException.wrongType);
         }
     }
 
@@ -112,8 +126,7 @@ public class UserManager {
     private void insertUser(String name, String surname, String dni, String password, String license, int type) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        User user = new User(searchLastID(), name, surname, dni, license, password, type,
-                new java.sql.Date(Calendar.getInstance().getTime().getTime()));
+        User user = new User(searchLastID(), name, surname, dni, license, password, type, null);
         session.save(user);
         transaction.commit();
     }
