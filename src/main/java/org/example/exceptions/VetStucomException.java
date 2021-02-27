@@ -13,6 +13,7 @@ public class VetStucomException extends Exception {
     public static final int expedientNotFound = 5;
     public static final int userNotFound = 6;
     public static final int wrongType = 7;
+    public static final int deleteAdministrator = 8;
 
 
     private final int value;
@@ -29,7 +30,8 @@ public class VetStucomException extends Exception {
             "--> Error. Username or password not found. Try again <--",
             "--> Expedient not found. Try again <--",
             "--> User not found. Try again <--",
-            "--> Wrong type. Try again <--"
+            "--> Wrong type. Try again <--",
+            "--> You can't delete yourself becouse you are an Administrator. <--"
 
     );
 

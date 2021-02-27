@@ -1,5 +1,6 @@
 package org.example.manager;
 
+import com.sun.xml.bind.v2.TODO;
 import org.example.exceptions.VetStucomException;
 import org.example.model.User;
 import org.example.utils.Printer;
@@ -81,7 +82,6 @@ public class UserManager {
         return query.list();
     }
 
-
     public void consultUsers() {
         printer.printUsers(selectUsers());
     }
@@ -99,12 +99,18 @@ public class UserManager {
             String password = bufferedReader.readLine();
             System.out.println("Type user's personal license: ");
             String license = bufferedReader.readLine();
-            printer.showUserTypes();
-            System.out.println("Type user's type: ");
-            int type = Integer.parseInt(bufferedReader.readLine());
-            if(type > 0 && type < 4) insertUser(name, surname, dni, password, license, type);
-            else throw new VetStucomException(VetStucomException.wrongType);
+            int type = selectType();
+            insertUser(name, surname, dni, password, license, type);
         }
+    }
+
+    private int selectType() throws IOException, VetStucomException {
+        printer.showUserTypes();
+        System.out.println("Type user's type: ");
+        int type = Integer.parseInt(bufferedReader.readLine());
+
+        if(type < 1 || type > 3) throw new VetStucomException(VetStucomException.wrongType);
+        return type;
     }
 
     public boolean verifyFormatDni(String dni) throws VetStucomException {
@@ -126,6 +132,7 @@ public class UserManager {
     private void insertUser(String name, String surname, String dni, String password, String license, int type) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
+
         User user = new User(searchLastID(), name, surname, dni, license, password, type, null);
         session.save(user);
         transaction.commit();
@@ -143,10 +150,11 @@ public class UserManager {
 
     public void deleteUser() throws VetStucomException, IOException {
         consultUsers();
-        System.out.println("Choose the expedient by its id: ");
+        System.out.println("Choose the user by its id: ");
         int id = Integer.parseInt(bufferedReader.readLine());
-        /// TODO: 24/02/2021 ADMIN CANNOT DELETE HIMSELF
-        deleteUserByID(id);
+        if(id != user.getId()) deleteUserByID(id);
+        else throw new VetStucomException(VetStucomException.deleteAdministrator);
+        // TODO: 27/02/2021 IF USER TO DELETE HAVE EXPEDIENTS UPDATE EXPEDIENT USER ID BY ACTUAL USER
     }
 
     private void deleteUserByID(int id) throws VetStucomException {
@@ -160,6 +168,44 @@ public class UserManager {
         transaction.commit();
     }
 
-    public void editUser() {
+    public void editUser() throws IOException, VetStucomException {
+        consultUsers();
+        System.out.println("Choose the user by its id: ");
+        int id = Integer.parseInt(bufferedReader.readLine());
+        selectEditOption(id);
+    }
+
+    private void selectEditOption(int id) throws IOException, VetStucomException {
+        printer.showMenuEditUser();
+        int option = Integer.parseInt(bufferedReader.readLine());
+        if(option == 1) editType(id);
+        else if(option == 2) editPassword(id);
+        else throw new VetStucomException(VetStucomException.incorrectOption);
+    }
+
+    private void editPassword(int id) throws IOException {
+        System.out.println("Type your new password: ");
+        String password = bufferedReader.readLine();
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query queryUpdate = session.createQuery(queries.UPDATE_PASSWORD_USER);
+        queryUpdate.setParameter("pass", password);
+        queryUpdate.setParameter("id", id);
+        queryUpdate.executeUpdate();
+        transaction.commit();
+    }
+
+    private void editType(int id) throws IOException, VetStucomException {
+        int type = selectType();
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query queryUpdate = session.createQuery(queries.UPDATE_TYPE_USER);
+        queryUpdate.setParameter("type", type);
+        queryUpdate.setParameter("id", id);
+        queryUpdate.executeUpdate();
+        transaction.commit();
     }
 }

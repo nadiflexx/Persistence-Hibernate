@@ -26,6 +26,7 @@ public class Manager {
     }
 
     public void login() {
+        printer.welcome();
         boolean exit = false;
 
         while (!exit) {

@@ -15,4 +15,9 @@ public class Queries {
 
     //UPDATE
     public final String UPDATE_DATE_USER  = "update from User set lastAccess=:date where dni=: dni";
+    public final String UPDATE_PASSWORD_USER  = "update from User set pass=:pass where id=: id";
+    public final String UPDATE_TYPE_USER  = "update from User set tipousuario=:type where id=: id";
+    public final String UPDATE_PETS_EXPEDIENT  = "update from Expedient set nmascotas=:npets where id=: id";
+    public final String UPDATE_PHONE_EXPEDIENT  = "update from Expedient set telefono=:phone where id=: id";
+    public final String UPDATE_POSTAL_EXPEDIENT  = "update from Expedient set cp=:postalCode where id=: id";
 }

@@ -57,6 +57,7 @@ public class ExpedientsManager {
 
         Query query = session.createQuery(queries.SELECT_TABLE_EXPEDIENT_BY_ID);
         query.setParameter("id", id);
+        // TODO: 27/02/2021 FIX GETSINGLERESULT ERROR
         Expedient expedient = (Expedient) query.getSingleResult();
         printer.printExpedient(expedient);
         transaction.commit();
@@ -137,6 +138,62 @@ public class ExpedientsManager {
         transaction.commit();
     }
 
-    public void editExpedient() {
+    public void editExpedient() throws IOException, VetStucomException {
+        int id = consultExpedientsMini();
+        System.out.println("Are sure that you want to edit this expedient? y/n: ");
+        String answer = bufferedReader.readLine();
+        if(answer.equalsIgnoreCase("y")) selectEditOption(id);
+        else System.out.println("Canceling your request...");
+    }
+
+    private void selectEditOption(int id) throws IOException, VetStucomException {
+        printer.showMenuEditExpedient();
+        int option = Integer.parseInt(bufferedReader.readLine());
+        if(option == 1) editPets(id);
+        else if(option == 2) editPhone(id);
+        else if(option == 3) editPostalCode(id);
+        else throw new VetStucomException(VetStucomException.incorrectOption);
+    }
+
+    private void editPostalCode(int id) throws IOException {
+        System.out.println("Type the postal code: ");
+        String postalCode = bufferedReader.readLine();
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query queryUpdate = session.createQuery(queries.UPDATE_POSTAL_EXPEDIENT);
+        queryUpdate.setParameter("postalCode", postalCode);
+        queryUpdate.setParameter("id", id);
+        queryUpdate.executeUpdate();
+        transaction.commit();
+    }
+
+    private void editPhone(int id) throws IOException {
+        System.out.println("Type your phone: ");
+        String phone = bufferedReader.readLine();
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query queryUpdate = session.createQuery(queries.UPDATE_PHONE_EXPEDIENT);
+        queryUpdate.setParameter("phone", phone);
+        queryUpdate.setParameter("id", id);
+        queryUpdate.executeUpdate();
+        transaction.commit();
+    }
+
+    private void editPets(int id) throws IOException {
+        System.out.println("Type the number of pets: ");
+        int npets = Integer.parseInt(bufferedReader.readLine());
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query queryUpdate = session.createQuery(queries.UPDATE_PETS_EXPEDIENT);
+        queryUpdate.setParameter("npets", npets);
+        queryUpdate.setParameter("id", id);
+        queryUpdate.executeUpdate();
+        transaction.commit();
     }
 }

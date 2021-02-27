@@ -12,6 +12,13 @@ public class Printer {
 
     public Printer() {}
 
+
+    public void welcome() {
+        System.out.println("----------------------------------");
+        System.out.println("-------------WELCOME!-------------");
+        System.out.println("----------------------------------");
+    }
+
     public void showMenuAdministrator() {
         System.out.println();
         System.out.println("Choose an option: ");
@@ -77,6 +84,27 @@ public class Printer {
         System.out.println("----------------------------------");
         System.out.println("-------------GOODBYE!-------------");
         System.out.println("----------------------------------");
+    }
+
+    public void showMenuEditExpedient() {
+        System.out.println();
+        System.out.println("Choose an option: ");
+        System.out.println();
+        System.out.println(" -------EDIT--------");
+        System.out.println("| 1) Number of pets |");
+        System.out.println("| 2) Phone          |");
+        System.out.println("| 3) Postal code    |");
+        System.out.println(" -------------------");
+    }
+
+    public void showMenuEditUser() {
+        System.out.println();
+        System.out.println("Choose an option: ");
+        System.out.println();
+        System.out.println(" -----EDIT-----");
+        System.out.println("| 1) Type      |");
+        System.out.println("| 2) Password  |");
+        System.out.println(" --------------");
     }
 
     public void printUsers(List<User> userList) {
