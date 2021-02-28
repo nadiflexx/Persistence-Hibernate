@@ -10,7 +10,8 @@ import java.util.List;
 
 public class Printer {
 
-    public Printer() {}
+    public Printer() {
+    }
 
 
     public void welcome() {
@@ -115,15 +116,15 @@ public class Printer {
             System.out.println(" |  DNI: " + user.getDni());
             System.out.println(" |  User type: " + printUserType(user.getUserType()));
             System.out.println(" |  Personal license: " + user.getLicense());
-            if(user.getLastAccess() != null) System.out.println(" |  Last access: " + user.getLastAccess());
+            if (user.getLastAccess() != null) System.out.println(" |  Last access: " + user.getLastAccess());
             System.out.println(" |");
         }
     }
 
     private String printUserType(int userType) {
         String type = "Administrator";
-        if(userType == 1) type = "Assistant";
-        else if(userType == 2) type = "Veterinary";
+        if (userType == 1) type = "Assistant";
+        else if (userType == 2) type = "Veterinary";
         return type;
     }
 

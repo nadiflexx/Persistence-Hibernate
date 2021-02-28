@@ -2,6 +2,7 @@ package org.example.manager;
 
 import org.example.exceptions.VetStucomException;
 import org.example.utils.Printer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,11 +37,7 @@ public class Manager {
                 switch (Integer.parseInt(bufferedReader.readLine())) {
                     case 1:
                         userManager.login();
-                        menuUser(userManager.getUser().getUserType());
-
-                        break;
-                    case 2:
-                        userManager.selectUsers();
+                        menuVetStucom(userManager.getUser().getUserType());
                         break;
                     case 0:
                         printer.exit();
@@ -57,7 +54,7 @@ public class Manager {
         }
     }
 
-    private void menuUser(int userType) {
+    private void menuVetStucom(int userType) {
         boolean exit = false;
 
         while (!exit) {
@@ -87,6 +84,8 @@ public class Manager {
                         break;
                     case 7:
                         userManager.editUser();
+                        //if you change your own type you will be redirected to the login menu
+                        if (userManager.getUser().getUserType() != 3) exit = true;
                         break;
                     case 8:
                         userManager.consultUsers();
@@ -108,15 +107,15 @@ public class Manager {
     private int checkUserTypeMenu(int userType) throws IOException {
         int option;
 
-        if(userType == 1) {
+        if (userType == 1) {
             printer.showMenuAssistant();
             option = Integer.parseInt(bufferedReader.readLine());
-            if (option != 1) option = -1;
+            if (option != 1 && option != 0) option = -1;
         } else if (userType == 2) {
             printer.showMenuVeterinary();
             option = Integer.parseInt(bufferedReader.readLine());
-            if(option > 4) option = -1;
-        } else  {
+            if (option > 4) option = -1;
+        } else {
             printer.showMenuAdministrator();
             option = Integer.parseInt(bufferedReader.readLine());
         }

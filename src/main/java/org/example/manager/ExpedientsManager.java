@@ -41,7 +41,7 @@ public class ExpedientsManager {
         Transaction transaction = session.beginTransaction();
 
         Query query = session.createQuery(queries.SELECT_TABLE_EXPEDIENT);
-        if(query.list().size() > 0) {
+        if (query.list().size() > 0) {
             printer.printExpedientsMini(query);
             transaction.commit();
             System.out.println("Select one expedient by its ID to show all information: ");
@@ -51,13 +51,13 @@ public class ExpedientsManager {
         } else throw new VetStucomException(VetStucomException.contentVoid);
     }
 
-    private void consultExpedients(int id) {
+    private void consultExpedients(int id) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
         Query query = session.createQuery(queries.SELECT_TABLE_EXPEDIENT_BY_ID);
         query.setParameter("id", id);
-        // TODO: 27/02/2021 FIX GETSINGLERESULT ERROR
+        if (query.getResultList().size() != 1) throw new VetStucomException(VetStucomException.expedientNotFound);
         Expedient expedient = (Expedient) query.getSingleResult();
         printer.printExpedient(expedient);
         transaction.commit();
@@ -70,7 +70,7 @@ public class ExpedientsManager {
         String surname = bufferedReader.readLine();
         System.out.println("Type user's DNI: ");
         String dni = bufferedReader.readLine();
-        if(verifyFormatDni(dni)) {
+        if (verifyFormatDni(dni)) {
             System.out.println("Type the number of pets: ");
             int npets = Integer.parseInt(bufferedReader.readLine());
             System.out.println("Type the postal code: ");
@@ -113,7 +113,7 @@ public class ExpedientsManager {
 
         Query query = session.createQuery(queries.SELECT_MAX_ID_FROM_EXPEDIENT);
         int id;
-        if(query.getSingleResult() == null) id = 0;
+        if (query.getSingleResult() == null) id = 0;
         else id = (Integer) query.getSingleResult();
         transaction.commit();
         return id + 1;
@@ -123,7 +123,7 @@ public class ExpedientsManager {
         int id = consultExpedientsMini();
         System.out.println("Are sure that you want to delete this expedient? y/n: ");
         String answer = bufferedReader.readLine();
-        if(answer.equalsIgnoreCase("y")) deleteExpedientById(id);
+        if (answer.equalsIgnoreCase("y")) deleteExpedientById(id);
         else System.out.println("Canceling your request...");
     }
 
@@ -134,7 +134,7 @@ public class ExpedientsManager {
         Query queryDelete = session.createQuery(queries.DELETE_FROM_EXPEDIENT_BY_ID);
         queryDelete.setParameter("id", id);
 
-        if(queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.expedientNotFound);
+        if (queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.expedientNotFound);
         transaction.commit();
     }
 
@@ -142,16 +142,16 @@ public class ExpedientsManager {
         int id = consultExpedientsMini();
         System.out.println("Are sure that you want to edit this expedient? y/n: ");
         String answer = bufferedReader.readLine();
-        if(answer.equalsIgnoreCase("y")) selectEditOption(id);
+        if (answer.equalsIgnoreCase("y")) selectEditOption(id);
         else System.out.println("Canceling your request...");
     }
 
     private void selectEditOption(int id) throws IOException, VetStucomException {
         printer.showMenuEditExpedient();
         int option = Integer.parseInt(bufferedReader.readLine());
-        if(option == 1) editPets(id);
-        else if(option == 2) editPhone(id);
-        else if(option == 3) editPostalCode(id);
+        if (option == 1) editPets(id);
+        else if (option == 2) editPhone(id);
+        else if (option == 3) editPostalCode(id);
         else throw new VetStucomException(VetStucomException.incorrectOption);
     }
 

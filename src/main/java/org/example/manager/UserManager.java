@@ -56,8 +56,8 @@ public class UserManager {
 
     private User verifyLogin(String username, String password) {
         User userLogged = null;
-        for (User user: selectUsers()) {
-            if(user.getName().equalsIgnoreCase(username)) if(user.getPassword().equals(password)) userLogged = user;
+        for (User user : selectUsers()) {
+            if (user.getName().equalsIgnoreCase(username)) if (user.getPassword().equals(password)) userLogged = user;
         }
         return userLogged;
     }
@@ -94,7 +94,7 @@ public class UserManager {
         System.out.println("Type user's DNI: ");
         String dni = bufferedReader.readLine();
 
-        if(verifyFormatDni(dni)) {
+        if (verifyFormatDni(dni)) {
             System.out.println("Type user's password: ");
             String password = bufferedReader.readLine();
             System.out.println("Type user's personal license: ");
@@ -109,7 +109,7 @@ public class UserManager {
         System.out.println("Type user's type: ");
         int type = Integer.parseInt(bufferedReader.readLine());
 
-        if(type < 1 || type > 3) throw new VetStucomException(VetStucomException.wrongType);
+        if (type < 1 || type > 3) throw new VetStucomException(VetStucomException.wrongType);
         return type;
     }
 
@@ -129,7 +129,7 @@ public class UserManager {
         return isDniCorrect;
     }
 
-    private void insertUser(String name, String surname, String dni, String password, String license, int type) {
+    private void insertUser(String name, String surname, String dni, String password, String license, int type) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -138,11 +138,12 @@ public class UserManager {
         transaction.commit();
     }
 
-    private int searchLastID() {
+    private int searchLastID() throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
         Query query = session.createQuery(queries.SELECT_MAX_ID_FROM_USER);
+        if (query.getResultList().size() != 1) throw new VetStucomException(VetStucomException.userNotFound);
         int id = (Integer) query.getSingleResult();
         transaction.commit();
         return id + 1;
@@ -152,7 +153,7 @@ public class UserManager {
         consultUsers();
         System.out.println("Choose the user by its id: ");
         int id = Integer.parseInt(bufferedReader.readLine());
-        if(id != user.getId()) deleteUserByID(id);
+        if (id != user.getId()) deleteUserByID(id);
         else throw new VetStucomException(VetStucomException.deleteAdministrator);
         // TODO: 27/02/2021 IF USER TO DELETE HAVE EXPEDIENTS UPDATE EXPEDIENT USER ID BY ACTUAL USER
     }
@@ -160,11 +161,11 @@ public class UserManager {
     private void deleteUserByID(int id) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        
+
         Query queryDelete = session.createQuery(queries.DELETE_FROM_USER_BY_ID);
         queryDelete.setParameter("id", id);
 
-        if(queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.userNotFound);
+        if (queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.userNotFound);
         transaction.commit();
     }
 
@@ -178,8 +179,8 @@ public class UserManager {
     private void selectEditOption(int id) throws IOException, VetStucomException {
         printer.showMenuEditUser();
         int option = Integer.parseInt(bufferedReader.readLine());
-        if(option == 1) editType(id);
-        else if(option == 2) editPassword(id);
+        if (option == 1) editType(id);
+        else if (option == 2) editPassword(id);
         else throw new VetStucomException(VetStucomException.incorrectOption);
     }
 
@@ -207,5 +208,6 @@ public class UserManager {
         queryUpdate.setParameter("id", id);
         queryUpdate.executeUpdate();
         transaction.commit();
+        if (id == user.getId()) user.setUserType(type);
     }
 }

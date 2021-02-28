@@ -7,25 +7,25 @@ import javax.persistence.Table;
 import java.sql.Date;
 
 @Entity
-@Table(name="expedientes")
+@Table(name = "expedientes")
 public class Expedient {
     @Id
     private int id;
     @Column(name = "nombre")
     private String name;
-    @Column(name="apellidos")
+    @Column(name = "apellidos")
     private String surnames;
-    @Column(name="dni")
+    @Column(name = "dni")
     private String dni;
-    @Column(name="nmascotas")
+    @Column(name = "nmascotas")
     private int npets;
-    @Column(name="fechaalta")
+    @Column(name = "fechaalta")
     private Date dischargeDate;
-    @Column(name="cp")
+    @Column(name = "cp")
     private String postalCode;
-    @Column(name="telefono")
+    @Column(name = "telefono")
     private String phone;
-    @Column(name="usuarioalta")
+    @Column(name = "usuarioalta")
     private int userId;
 
     public Expedient(int id, String name, String surnames, String dni, int npets, Date dischargeDate, String postalCode, String phone, int userId) {
@@ -40,7 +40,8 @@ public class Expedient {
         this.userId = userId;
     }
 
-    public Expedient() {}
+    public Expedient() {
+    }
 
     public int getId() {
         return id;

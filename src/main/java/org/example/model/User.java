@@ -1,4 +1,5 @@
 package org.example.model;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,7 +7,7 @@ import javax.persistence.Table;
 import java.sql.Date;
 
 @Entity
-@Table(name="usuarios")
+@Table(name = "usuarios")
 public class User {
     @Id
     private int id;
@@ -36,7 +37,8 @@ public class User {
         this.lastAccess = lastAccess;
     }
 
-    public User() {}
+    public User() {
+    }
 
     public int getId() {
         return id;
