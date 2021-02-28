@@ -101,9 +101,8 @@ public class ExpedientsManager {
     private void insertExpedient(User user, String name, String surname, String dni, int npets, String postalCode, String phone) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        Expedient expedient = new Expedient(searchLastID(), name, surname, dni, npets,
-                new java.sql.Date(Calendar.getInstance().getTime().getTime()), postalCode, phone, user.getId());
-        session.save(expedient);
+        session.save(new Expedient(searchLastID(), name, surname, dni, npets,
+                new java.sql.Date(Calendar.getInstance().getTime().getTime()), postalCode, phone, user.getId()));
         transaction.commit();
     }
 

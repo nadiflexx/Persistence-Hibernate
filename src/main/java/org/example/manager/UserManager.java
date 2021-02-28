@@ -132,9 +132,7 @@ public class UserManager {
     private void insertUser(String name, String surname, String dni, String password, String license, int type) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-
-        User user = new User(searchLastID(), name, surname, dni, license, password, type, null);
-        session.save(user);
+        session.save(new User(searchLastID(), name, surname, dni, license, password, type, null));
         transaction.commit();
     }
 

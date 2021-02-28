@@ -13,7 +13,6 @@ public class Printer {
     public Printer() {
     }
 
-
     public void welcome() {
         System.out.println("----------------------------------");
         System.out.println("-------------WELCOME!-------------");
