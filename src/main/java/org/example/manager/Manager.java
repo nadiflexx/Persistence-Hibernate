@@ -80,7 +80,9 @@ public class Manager {
                         userManager.registerUser();
                         break;
                     case 6:
-                        userManager.deleteUser();
+                        int oldUserId = userManager.getDeleteUser();
+                        expedientsManager.editExpedientsId(userManager.getUser().getId(), oldUserId);
+                        userManager.deleteUserByID(oldUserId);
                         break;
                     case 7:
                         userManager.editUser();

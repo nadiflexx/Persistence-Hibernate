@@ -1,6 +1,5 @@
 package org.example.manager;
 
-import com.sun.xml.bind.v2.TODO;
 import org.example.exceptions.VetStucomException;
 import org.example.model.User;
 import org.example.utils.Printer;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class UserManager {
@@ -147,16 +145,15 @@ public class UserManager {
         return id + 1;
     }
 
-    public void deleteUser() throws VetStucomException, IOException {
+    public int getDeleteUser() throws VetStucomException, IOException {
         consultUsers();
         System.out.println("Choose the user by its id: ");
         int id = Integer.parseInt(bufferedReader.readLine());
-        if (id != user.getId()) deleteUserByID(id);
+        if (id != user.getId()) return id;
         else throw new VetStucomException(VetStucomException.deleteAdministrator);
-        // TODO: 27/02/2021 IF USER TO DELETE HAVE EXPEDIENTS UPDATE EXPEDIENT USER ID BY ACTUAL USER
     }
 
-    private void deleteUserByID(int id) throws VetStucomException {
+    public void deleteUserByID(int id) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -171,7 +168,8 @@ public class UserManager {
         consultUsers();
         System.out.println("Choose the user by its id: ");
         int id = Integer.parseInt(bufferedReader.readLine());
-        selectEditOption(id);
+        if (id < 1 || id > searchLastID() - 1) throw new VetStucomException(VetStucomException.userNotFound);
+        else selectEditOption(id);
     }
 
     private void selectEditOption(int id) throws IOException, VetStucomException {
@@ -208,4 +206,6 @@ public class UserManager {
         transaction.commit();
         if (id == user.getId()) user.setUserType(type);
     }
+
+
 }

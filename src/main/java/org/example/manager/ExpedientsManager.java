@@ -195,4 +195,15 @@ public class ExpedientsManager {
         queryUpdate.executeUpdate();
         transaction.commit();
     }
+
+    public void editExpedientsId(int newUserId, int oldUserId) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query queryUpdate = session.createQuery(queries.UPDATE_ID_EXPEDIENT);
+        queryUpdate.setParameter("newUserId", newUserId);
+        queryUpdate.setParameter("oldUserId", oldUserId);
+        queryUpdate.executeUpdate();
+        transaction.commit();
+    }
 }

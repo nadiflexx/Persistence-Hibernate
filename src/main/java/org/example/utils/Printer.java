@@ -127,6 +127,7 @@ public class Printer {
         return type;
     }
 
+    // TODO: 04/03/2021 Change id for User name
     public void printExpedient(Expedient expedient) {
         System.out.println("(" + expedient.getId() + ")");
         System.out.println(" |  Name: " + expedient.getName());
@@ -136,6 +137,7 @@ public class Printer {
         System.out.println(" |  Number of pets: " + expedient.getNpets());
         System.out.println(" |  Postal code: " + expedient.getPostalCode());
         System.out.println(" |  Phone: " + expedient.getPhone());
+        System.out.println(" |  Creator of the expedient: " + expedient.getUserId());
         System.out.println(" |");
     }
 
