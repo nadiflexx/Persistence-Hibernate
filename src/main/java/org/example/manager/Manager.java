@@ -1,6 +1,7 @@
 package org.example.manager;
 
 import org.example.exceptions.VetStucomException;
+import org.example.model.Expedient;
 import org.example.utils.Printer;
 
 import java.io.BufferedReader;
@@ -65,7 +66,10 @@ public class Manager {
                     case -1:
                         throw new VetStucomException(VetStucomException.permissionDenied);
                     case 1:
-                        expedientsManager.consultExpedientsMini();
+                        //THIS IS FOR PRINT THE NAME OF THE CREATOR OF THE FULL EXPEDIENT INSTEAD OF PRINTING THE USERID
+                        int id = expedientsManager.consultExpedientsMini();
+                        Expedient expedient = expedientsManager.consultFullExpedient(id);
+                        printer.printExpedient(expedient, userManager.getUserNameById(expedient.getUserId()));
                         break;
                     case 2:
                         expedientsManager.registerExpedient(userManager.getUser());
@@ -80,13 +84,15 @@ public class Manager {
                         userManager.registerUser();
                         break;
                     case 6:
+                        //THIS IS FOR UPDATE THE ID OF THE DELETED CREATOR OF THE EXPEDIENT FOR THE NEW ONE.
                         int oldUserId = userManager.getDeleteUser();
                         expedientsManager.editExpedientsId(userManager.getUser().getId(), oldUserId);
                         userManager.deleteUserByID(oldUserId);
                         break;
                     case 7:
                         userManager.editUser();
-                        //if you change your own type you will be redirected to the login menu
+                        //If you change your own type you will be redirected to the login menu because you can't use
+                        //the administrator cases.
                         if (userManager.getUser().getUserType() != 3) exit = true;
                         break;
                     case 8:

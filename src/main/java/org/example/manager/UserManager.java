@@ -69,6 +69,7 @@ public class UserManager {
         queryUpdate.setParameter("date", new java.sql.Date(Calendar.getInstance().getTime().getTime()));
         queryUpdate.executeUpdate();
         transaction.commit();
+        session.close();
     }
 
     public List<User> selectUsers() {
@@ -132,6 +133,7 @@ public class UserManager {
         Transaction transaction = session.beginTransaction();
         session.save(new User(searchLastID(), name, surname, dni, license, password, type, null));
         transaction.commit();
+        session.close();
     }
 
     private int searchLastID() throws VetStucomException {
@@ -142,6 +144,7 @@ public class UserManager {
         if (query.getResultList().size() != 1) throw new VetStucomException(VetStucomException.userNotFound);
         int id = (Integer) query.getSingleResult();
         transaction.commit();
+        session.close();
         return id + 1;
     }
 
@@ -162,6 +165,7 @@ public class UserManager {
 
         if (queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.userNotFound);
         transaction.commit();
+        session.close();
     }
 
     public void editUser() throws IOException, VetStucomException {
@@ -192,6 +196,7 @@ public class UserManager {
         queryUpdate.setParameter("id", id);
         queryUpdate.executeUpdate();
         transaction.commit();
+        session.close();
     }
 
     private void editType(int id) throws IOException, VetStucomException {
@@ -204,8 +209,20 @@ public class UserManager {
         queryUpdate.setParameter("id", id);
         queryUpdate.executeUpdate();
         transaction.commit();
+        session.close();
         if (id == user.getId()) user.setUserType(type);
     }
 
 
+    public String getUserNameById(int id) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Query query = session.createQuery(queries.SELECT_NAME_FROM_USER_BY_ID);
+        query.setParameter("id", id);
+        String userName = (String) query.getSingleResult();
+        transaction.commit();
+        session.close();
+        return userName;
+    }
 }

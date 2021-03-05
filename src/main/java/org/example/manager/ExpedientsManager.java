@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
-import java.util.Scanner;
 
 public class ExpedientsManager {
     private SessionFactory sessionFactory;
@@ -45,22 +44,20 @@ public class ExpedientsManager {
             printer.printExpedientsMini(query);
             transaction.commit();
             System.out.println("Select one expedient by its ID to show all information: ");
-            int id = Integer.parseInt(bufferedReader.readLine());
-            consultExpedients(id);
-            return id;
+            session.close();
+            return Integer.parseInt(bufferedReader.readLine());
         } else throw new VetStucomException(VetStucomException.contentVoid);
     }
 
-    private void consultExpedients(int id) throws VetStucomException {
+    public Expedient consultFullExpedient(int id) throws VetStucomException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
         Query query = session.createQuery(queries.SELECT_TABLE_EXPEDIENT_BY_ID);
         query.setParameter("id", id);
         if (query.getResultList().size() != 1) throw new VetStucomException(VetStucomException.expedientNotFound);
-        Expedient expedient = (Expedient) query.getSingleResult();
-        printer.printExpedient(expedient);
         transaction.commit();
+        return (Expedient) query.getSingleResult();
     }
 
     public void registerExpedient(User user) throws VetStucomException, IOException {
@@ -70,6 +67,7 @@ public class ExpedientsManager {
         String surname = bufferedReader.readLine();
         System.out.println("Type user's DNI: ");
         String dni = bufferedReader.readLine();
+
         if (verifyFormatDni(dni)) {
             System.out.println("Type the number of pets: ");
             int npets = Integer.parseInt(bufferedReader.readLine());
@@ -101,9 +99,11 @@ public class ExpedientsManager {
     private void insertExpedient(User user, String name, String surname, String dni, int npets, String postalCode, String phone) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
+
         session.save(new Expedient(searchLastID(), name, surname, dni, npets,
                 new java.sql.Date(Calendar.getInstance().getTime().getTime()), postalCode, phone, user.getId()));
         transaction.commit();
+        session.close();
     }
 
     private int searchLastID() {
@@ -115,6 +115,7 @@ public class ExpedientsManager {
         if (query.getSingleResult() == null) id = 0;
         else id = (Integer) query.getSingleResult();
         transaction.commit();
+        session.close();
         return id + 1;
     }
 
@@ -135,6 +136,7 @@ public class ExpedientsManager {
 
         if (queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.expedientNotFound);
         transaction.commit();
+        session.close();
     }
 
     public void editExpedient() throws IOException, VetStucomException {
@@ -166,6 +168,7 @@ public class ExpedientsManager {
         queryUpdate.setParameter("id", id);
         queryUpdate.executeUpdate();
         transaction.commit();
+        session.close();
     }
 
     private void editPhone(int id) throws IOException {
@@ -180,6 +183,7 @@ public class ExpedientsManager {
         queryUpdate.setParameter("id", id);
         queryUpdate.executeUpdate();
         transaction.commit();
+        session.close();
     }
 
     private void editPets(int id) throws IOException {
@@ -194,6 +198,7 @@ public class ExpedientsManager {
         queryUpdate.setParameter("id", id);
         queryUpdate.executeUpdate();
         transaction.commit();
+        session.close();
     }
 
     public void editExpedientsId(int newUserId, int oldUserId) {
@@ -205,5 +210,6 @@ public class ExpedientsManager {
         queryUpdate.setParameter("oldUserId", oldUserId);
         queryUpdate.executeUpdate();
         transaction.commit();
+        session.close();
     }
 }
