@@ -134,6 +134,7 @@ public class UserManager {
         session.save(new User(searchLastID(), name, surname, dni, license, password, type, null));
         transaction.commit();
         session.close();
+        System.out.println("--> User inserted correctly <--");
     }
 
     private int searchLastID() throws VetStucomException {
@@ -166,6 +167,7 @@ public class UserManager {
         if (queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.userNotFound);
         transaction.commit();
         session.close();
+        System.out.println("--> User deleted correctly <--");
     }
 
     public void editUser() throws IOException, VetStucomException {
@@ -197,6 +199,7 @@ public class UserManager {
         queryUpdate.executeUpdate();
         transaction.commit();
         session.close();
+        System.out.println("--> User edited correctly <--");
     }
 
     private void editType(int id) throws IOException, VetStucomException {
@@ -211,6 +214,7 @@ public class UserManager {
         transaction.commit();
         session.close();
         if (id == user.getId()) user.setUserType(type);
+        System.out.println("--> User edited correctly <--");
     }
 
 

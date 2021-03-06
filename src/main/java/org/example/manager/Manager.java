@@ -67,18 +67,18 @@ public class Manager {
                         throw new VetStucomException(VetStucomException.permissionDenied);
                     case 1:
                         //THIS IS FOR PRINT THE NAME OF THE CREATOR OF THE FULL EXPEDIENT INSTEAD OF PRINTING THE USERID
-                        int id = expedientsManager.consultExpedientsMini();
-                        Expedient expedient = expedientsManager.consultFullExpedient(id);
-                        printer.printExpedient(expedient, userManager.getUserNameById(expedient.getUserId()));
+                        showExpedientWithCreatorName();
                         break;
                     case 2:
                         expedientsManager.registerExpedient(userManager.getUser());
                         break;
                     case 3:
-                        expedientsManager.deleteExpedient();
+                        int id = showExpedientWithCreatorName();
+                        expedientsManager.deleteExpedient(id);
                         break;
                     case 4:
-                        expedientsManager.editExpedient();
+                        int idd = showExpedientWithCreatorName();
+                        expedientsManager.editExpedient(idd);
                         break;
                     case 5:
                         userManager.registerUser();
@@ -104,12 +104,21 @@ public class Manager {
                     default:
                         throw new VetStucomException(VetStucomException.incorrectOption);
                 }
-            } catch (NumberFormatException | IOException e) {
-                System.out.println("Error. Wrong characters. Try again.");
+            } catch (NumberFormatException e) {
+                System.out.println("--> Error. Wrong characters. Try again. <--");
             } catch (VetStucomException e) {
                 System.out.println(e.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    private int showExpedientWithCreatorName() throws VetStucomException, IOException {
+        int id = expedientsManager.consultExpedientsMini();
+        Expedient expedient = expedientsManager.consultFullExpedient(id);
+        printer.printExpedient(expedient, userManager.getUserNameById(expedient.getUserId()));
+        return id;
     }
 
     private int checkUserTypeMenu(int userType) throws IOException {
@@ -118,11 +127,11 @@ public class Manager {
         if (userType == 1) {
             printer.showMenuAssistant();
             option = Integer.parseInt(bufferedReader.readLine());
-            if (option != 1 && option != 0) option = -1;
+            if (option != 1 && option != 0 && option < 9) option = -1;
         } else if (userType == 2) {
             printer.showMenuVeterinary();
             option = Integer.parseInt(bufferedReader.readLine());
-            if (option > 4) option = -1;
+            if (option > 4  && option < 9) option = -1;
         } else {
             printer.showMenuAdministrator();
             option = Integer.parseInt(bufferedReader.readLine());

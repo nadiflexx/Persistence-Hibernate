@@ -104,6 +104,7 @@ public class ExpedientsManager {
                 new java.sql.Date(Calendar.getInstance().getTime().getTime()), postalCode, phone, user.getId()));
         transaction.commit();
         session.close();
+        System.out.println("--> Expedient inserted correctly <--");
     }
 
     private int searchLastID() {
@@ -119,12 +120,12 @@ public class ExpedientsManager {
         return id + 1;
     }
 
-    public void deleteExpedient() throws VetStucomException, IOException {
-        int id = consultExpedientsMini();
+    public void deleteExpedient(int id) throws VetStucomException, IOException {
         System.out.println("Are sure that you want to delete this expedient? y/n: ");
         String answer = bufferedReader.readLine();
         if (answer.equalsIgnoreCase("y")) deleteExpedientById(id);
-        else System.out.println("Canceling your request...");
+        else if (answer.equalsIgnoreCase("n")) System.out.println("Canceling your request...");
+        else throw new VetStucomException(VetStucomException.incorrectOption);
     }
 
     private void deleteExpedientById(int id) throws VetStucomException {
@@ -137,14 +138,15 @@ public class ExpedientsManager {
         if (queryDelete.executeUpdate() == 0) throw new VetStucomException(VetStucomException.expedientNotFound);
         transaction.commit();
         session.close();
+        System.out.println("--> Expedient deleted correctly <--");
     }
 
-    public void editExpedient() throws IOException, VetStucomException {
-        int id = consultExpedientsMini();
+    public void editExpedient(int id) throws IOException, VetStucomException {
         System.out.println("Are sure that you want to edit this expedient? y/n: ");
         String answer = bufferedReader.readLine();
         if (answer.equalsIgnoreCase("y")) selectEditOption(id);
-        else System.out.println("Canceling your request...");
+        else if (answer.equalsIgnoreCase("n")) System.out.println("Canceling your request...");
+        else throw new VetStucomException(VetStucomException.incorrectOption);
     }
 
     private void selectEditOption(int id) throws IOException, VetStucomException {
@@ -169,6 +171,7 @@ public class ExpedientsManager {
         queryUpdate.executeUpdate();
         transaction.commit();
         session.close();
+        System.out.println("--> Expedient edited correctly <--");
     }
 
     private void editPhone(int id) throws IOException {
@@ -184,6 +187,7 @@ public class ExpedientsManager {
         queryUpdate.executeUpdate();
         transaction.commit();
         session.close();
+        System.out.println("--> Expedient edited correctly <--");
     }
 
     private void editPets(int id) throws IOException {
@@ -199,6 +203,7 @@ public class ExpedientsManager {
         queryUpdate.executeUpdate();
         transaction.commit();
         session.close();
+        System.out.println("--> Expedient edited correctly <--");
     }
 
     public void editExpedientsId(int newUserId, int oldUserId) {

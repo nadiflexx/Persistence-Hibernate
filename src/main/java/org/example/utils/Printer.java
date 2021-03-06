@@ -10,12 +10,9 @@ import java.util.List;
 
 public class Printer {
 
-    public Printer() {
-    }
-
     public void welcome() {
         System.out.println("----------------------------------");
-        System.out.println("-------------WELCOME!-------------");
+        System.out.println("------!WELCOME TO VETSTUCOM!------");
         System.out.println("----------------------------------");
     }
 
