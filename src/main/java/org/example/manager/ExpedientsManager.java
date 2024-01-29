@@ -19,9 +19,9 @@ import java.io.InputStreamReader;
 import java.util.Calendar;
 
 public class ExpedientsManager {
-    private SessionFactory sessionFactory;
-    private Printer printer;
-    private Queries queries;
+    private final SessionFactory sessionFactory;
+    private final Printer printer;
+    private final Queries queries;
     private final BufferedReader bufferedReader;
 
     public ExpedientsManager() {
@@ -40,7 +40,7 @@ public class ExpedientsManager {
         Transaction transaction = session.beginTransaction();
 
         Query query = session.createQuery(queries.SELECT_TABLE_EXPEDIENT);
-        if (query.list().size() > 0) {
+        if (!query.list().isEmpty()) {
             printer.printExpedientsMini(query);
             transaction.commit();
             System.out.println("Select one expedient by its ID to show all information: ");

@@ -20,10 +20,10 @@ import java.util.List;
 
 
 public class UserManager {
-    private SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
     private User user;
-    private Printer printer;
-    private Queries queries;
+    private final Printer printer;
+    private final Queries queries;
     private final BufferedReader bufferedReader;
 
     public UserManager() {

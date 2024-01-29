@@ -22,7 +22,7 @@ public class VetStucomException extends Exception {
         this.value = value;
     }
 
-    private List<String> message = Arrays.asList(
+    private final List<String> message = Arrays.asList(
             "--> Error. Incorrect option. Try again <--",
             "--> Error. Permission denied. Try again <--",
             "--> Incorrect format of DNI. Please introduce 8 numbers and 1 letter <--",

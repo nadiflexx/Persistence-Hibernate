@@ -3,9 +3,6 @@ package org.example.utils;
 import org.example.model.Expedient;
 import org.example.model.User;
 import org.hibernate.query.Query;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 public class Printer {
